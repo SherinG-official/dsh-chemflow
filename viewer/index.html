@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>结构视图</title>
+    <style>
+      :root { color-scheme: light; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #f4f5f7; font: 13px/1.5 "Segoe UI", "Microsoft YaHei", sans-serif; }
+      #stage { position: absolute; inset: 0; }
+      canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+      canvas.dragging { cursor: grabbing; }
+
+      .panel {
+        position: absolute; top: 14px; left: 14px; width: 268px; max-height: calc(100% - 28px);
+        display: flex; flex-direction: column; gap: 10px; padding: 14px;
+        background: rgba(255, 255, 255, 0.92); border: 1px solid #e2e5ea; border-radius: 12px;
+        box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08); overflow: auto; backdrop-filter: blur(6px);
+      }
+      .panel h1 { margin: 0; font-size: 15px; font-weight: 600; color: #111827; }
+      .meta { color: #6b7280; font-size: 12px; }
+      .group { border-top: 1px solid #eef0f3; padding-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+      .group:first-of-type { border-top: none; padding-top: 0; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .row label { color: #374151; }
+      .swatch { display: inline-flex; align-items: center; gap: 6px; }
+      input[type="color"] { width: 26px; height: 22px; padding: 0; border: 1px solid #d1d5db; border-radius: 5px; background: none; }
+      input[type="range"] { width: 100%; accent-color: #2563eb; }
+      .value { font-variant-numeric: tabular-nums; color: #111827; min-width: 52px; text-align: right; }
+      .btn { padding: 5px 10px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; color: #111827; cursor: pointer; font: inherit; }
+      .btn:hover { background: #f3f4f6; }
+      .btn.active { background: #2563eb; border-color: #2563eb; color: #fff; }
+      .btns { display: flex; gap: 6px; flex-wrap: wrap; }
+      .hint { color: #9ca3af; font-size: 11px; line-height: 1.6; }
+      .badge { display: inline-block; padding: 0 6px; border-radius: 999px; background: #eef2ff; color: #3730a3; font-size: 11px; }
+      .loading { position: absolute; inset: 0; display: grid; place-items: center; color: #6b7280; background: #f4f5f7; }
+      .error { color: #b91c1c; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div id="stage"><canvas id="gl"></canvas></div>
+    <div class="panel" id="panel" hidden>
+      <h1 id="title">结构视图</h1>
+      <div class="meta" id="meta"></div>
+      <div class="group" id="volumes"></div>
+      <div class="group">
+        <div class="row"><label>骨架</label><input type="checkbox" id="skeleton" checked /></div>
+        <div class="row"><label>显示氢</label><input type="checkbox" id="showH" checked /></div>
+        <div class="row"><label>背景</label>
+          <span class="btns">
+            <button class="btn active" data-bg="#ffffff">白</button>
+            <button class="btn" data-bg="#0f1115">黑</button>
+          </span>
+        </div>
+        <div class="row"><label>投影</label>
+          <span class="btns" id="projection">
+            <button class="btn active" data-proj="persp">透视</button>
+            <button class="btn" data-proj="ortho">正交</button>
+          </span>
+        </div>
+      </div>
+      <div class="group">
+        <div class="btns">
+          <button class="btn" id="reset">重置视角</button>
+          <button class="btn" id="spin">自旋</button>
+          <button class="btn" id="shot">导出 PNG（2×）</button>
+        </div>
+      </div>
+      <div class="hint">
+        左键拖动旋转 · 右键拖动平移 · 滚轮缩放<br />
+        r 重置 · w 白底 · b 黑底 · 空格自旋 · +/- 阈值
+      </div>
+    </div>
+    <div class="loading" id="loading">正在加载体数据…</div>
+    <script type="module" src="/viewer/viewer.js"></script>
+  </body>
+</html>

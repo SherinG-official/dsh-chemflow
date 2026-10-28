@@ -1,0 +1,32 @@
+# dsh-chemflow bundle layer：把化学计算工作流插件挂进 cordis 树。
+#
+# 这是本包的 `dsh.bundle.patch` 层（package.json#dsh.bundle.patch），由 profile 的
+# `dsh.profile.bundles` 引入。层语义：YAML 数组，元素是行操作动词；`insert` 往组合
+# 配置里插入插件行。
+#
+# 注意：配置字段全部是**扁平**的（sshHost / sshPort …），没有嵌套对象 ——
+# 现有插件的 Config 都是扁平结构，嵌套对象在配置校验里没验证过，不值得冒险。
+- insert:
+    - id: dsh-chemflow
+      name: dsh-chemflow
+      config:
+        # ---- 本机可执行文件 ----
+        multiwfnExe: 'D:\Program Files\Multiwfn\Multiwfn.exe'
+        multiwfnHome: 'D:\Program Files\Multiwfn'
+        vmdExe: 'D:\Program Files\VMD2\vmd.exe'
+        # 留空则自动找 DSH 自带 Python（带 numpy/Pillow）→ PATH 里的 python
+        pythonExe: ''
+
+        # ---- 远程计算（SSH）----
+        # 密码与密钥二选一：给了 sshKeyPath 就优先用密钥（推荐）。
+        sshHost: '114.214.201.249'
+        sshPort: 520
+        sshUsername: 'SherinG'
+        sshPassword: ''
+        sshKeyPath: ''
+        sshRemoteRoot: '~/chemflow'
+        sshPartition: 'chem'
+        sshCores: 16
+        sshTimeLimit: '24:00:00'
+        sshOrcaRoot: '/opt/software/orca-5.0.3'
+        sshMpiRoot: '/opt/software/openmpi-4.1.5'

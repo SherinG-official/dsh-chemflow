@@ -1,0 +1,58 @@
+{
+  "name": "dsh-chemflow",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness 插件：ORCA 提交与解析 → Multiwfn 波函数分析 → VMD 出图。把「化学计算到成图」的整条链搬进对话。",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "py",
+    "vendor",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "chemistry",
+    "multiwfn",
+    "orca",
+    "vmd",
+    "td-dft"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-api-remotes",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ],
+      "platform": "web"
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/schemastery": "^3.18.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "smoke": "node scripts/smoke.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "test": "node test/parse.test.mjs && node test/recipes.test.mjs && node test/units.test.mjs && node test/view.test.mjs && node test/surface.test.mjs && node test/structure.test.mjs && node test/client.test.mjs && node test/client-compat.test.mjs && node test/views.test.mjs"
+  }
+}

@@ -1,5 +1,8 @@
 # dsh-chemflow
 
+[![ci](https://github.com/SherinG-official/dsh-chemflow/actions/workflows/ci.yml/badge.svg)](https://github.com/SherinG-official/dsh-chemflow/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 给 DeepSeek Harness 装一条「**ORCA 计算 → Multiwfn 波函数分析 → VMD 出图**」的链路。
 数值图（能级图、棒谱、双 Y、ECD）仍然交给 `dsh-origin-api`；这个插件负责**集群提交**、
 **波函数分析**、**结构图渲染**。

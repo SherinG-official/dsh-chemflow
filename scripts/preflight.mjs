@@ -86,7 +86,7 @@ try {
   const { createHarness } = await import('../test/harness.mjs')
   const harness = await createHarness()
   const expected = ['chem_env', 'chem_orca', 'chem_orca_states', 'chem_hole_electron', 'chem_orbital',
-    'chem_aromatic', 'chem_esp', 'chem_render', 'chem_view', 'chem_views', 'chem_multiwfn']
+    'chem_aromatic', 'chem_esp', 'chem_render', 'chem_view', 'chem_views', 'chem_export', 'chem_multiwfn']
   const missing = expected.filter((name) => !harness.tools.has(name))
   if (missing.length > 0) fail('工具注册不全', `缺：${missing.join(', ')}`)
   else pass(`${harness.names.length} 个工具`, harness.names.join(' '))

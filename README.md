@@ -36,9 +36,36 @@
 | `chem_esp` | ESP 表面定量（面积 / 正负区 / 极值 / σ² / ν）+ `surf.cub` |
 | `chem_render` | VMD 出图：等值面 / 球棍 / 叠加骨架，PNG/TIFF，自动裁边与空图检测 |
 | `chem_view` | 生成「结构视图包」（体数据 + 原子/键），供应用内 3D 面板打开 |
+| `chem_views` | 管理「结构视图」列表（list / add / remove / prune），不动磁盘文件 |
+| `chem_export` | 结构转通用格式：`.xyz` / `.mol`(3D) / `-2d.mol`(2D 结构式) / `.sdf` / `.pdb` / `.svg` |
 | `chem_multiwfn` | 逃生口：任意 stdin recipe（菜单号随版本变化时兜底） |
 
 **产物目录必须由用户指定**（`outDir`）。不同课题放不同目录，插件不设全局默认路径。
+
+### 结构导出（`chem_export`）
+
+输入可以是任意结构文件（`.xyz` / ORCA `.out` / `.molden` / `.cub`），也可以是已有视图包的
+`meta.json` —— 直接把手上面板里看的那个结构导出来。
+
+| 格式 | 内容 |
+|---|---|
+| `.xyz` | 3D 坐标，最通用的交换格式 |
+| `.mol` | MDL Molfile V2000，**3D** 坐标（可拖进 Avogadro / PyMOL / ChemDraw） |
+| `-2d.mol` | 同上但用**生成出来的 2D 坐标**（z=0），适合直接排版 |
+| `.sdf` | 与 2D mol 同源，多带一个 `$$$$` 结束符 |
+| `.pdb` | ATOM + CONECT，给 Chimera/PyMOL 读小分子 |
+| `.svg` | 2D 结构式矢量图（杂原子带隐含氢，如 NH₂；双键画平行线；默认隐氢） |
+
+已知边界（都写在工具返回里，避免误用）：
+
+- **键是按距离推断的连通性**，键级按键长估（单/双/三），**不做芳香性识别**——芳香环会写成单键；
+- 2D 坐标是 **PCA 主平面投影 + 弹簧松弛**，平面分子基本正确、多环也能撑开，
+  但不是 ChemDraw 级排版（不做环系模板匹配、立体化学标记）；
+- 不补氢、不做质子化态判断：原子上有什么就是什么。
+
+> 参考了 [dshchem](https://github.com/cloudbywu/dshchem)（RDKit/ASE 后端）和
+> [gaussian-dsh-plugin](https://github.com/yangdw2024/gaussian-dsh-plugin) 的思路，
+> 但**不引入 RDKit / Python 依赖**——纯 JS 实现，离线可用，装上就能用。
 
 ### 应用内 3D 查看器
 

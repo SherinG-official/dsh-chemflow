@@ -34,14 +34,17 @@ jobs:
           exit $fail
 
       # 宿主插件能不能真的加载（宿主才有的包用 test/loader.mjs 换成桩）
+      # 工具名从 lib/index.js 的 TOOL_NAMES 取，避免这里和实现漂移。
       - name: 宿主插件加载
         run: |
           node --import ./test/register.mjs -e "
-            import('./test/harness.mjs').then(async (m) => {
+            Promise.all([import('./test/harness.mjs'), import('./lib/index.js')]).then(async ([m, index]) => {
               const h = await m.createHarness();
-              const expected = ['chem_env','chem_orca','chem_orca_states','chem_hole_electron','chem_orbital','chem_aromatic','chem_esp','chem_render','chem_view','chem_views','chem_multiwfn'];
+              const expected = index.TOOL_NAMES;
               const missing = expected.filter((n) => !h.tools.has(n));
+              const extra = h.names.filter((n) => !expected.includes(n));
               if (missing.length) { console.error('缺工具:', missing); process.exit(1); }
-              console.log('ok:', h.names.join(' '));
+              if (extra.length) { console.error('多出未登记的工具:', extra); process.exit(1); }
+              console.log('ok:', expected.length, '个 →', h.names.join(' '));
             });
           "

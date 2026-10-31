@@ -170,19 +170,27 @@ if (!existsSync(targetDir) || sync) {
 writeFileSync(ymlPath, ymlMerged, 'utf8')
 console.log('  已写入 cordis.patch.yml 配置（含 SSH 密码，明文存在本机）')
 
-// 「结构视图」列表文件的绝对路径要写进客户端 bundle：
-// 浏览器拿不到宿主配置，只能像动画库面板那样把一个绝对路径烘焙进去。
+// 「结构视图」列表 + 「画板」服务登记的绝对路径要写进客户端 bundle：
+// 浏览器拿不到宿主配置，只能像动画库面板那样把绝对路径烘焙进去。
 const dataDir = path.resolve(profileDir, '..', '..', 'dsh-chemflow')
 const indexPath = path.join(dataDir, 'views.json').replace(/\\/g, '/')
+const sketchInfoPath = path.join(dataDir, 'sketch.json').replace(/\\/g, '/')
 const clientPath = path.join(targetDir, 'lib', 'client.js')
 if (existsSync(clientPath)) {
-  const source = readFileSync(clientPath, 'utf8')
-  if (!source.includes('__DSH_CHEMFLOW_INDEX__')) {
-    console.warn('  ⚠ client.js 里没找到 __DSH_CHEMFLOW_INDEX__ 占位符，跳过路径注入')
-  } else {
-    writeFileSync(clientPath, source.replaceAll('__DSH_CHEMFLOW_INDEX__', indexPath), 'utf8')
+  let source = readFileSync(clientPath, 'utf8')
+  if (source.includes('__DSH_CHEMFLOW_INDEX__')) {
+    source = source.replaceAll('__DSH_CHEMFLOW_INDEX__', indexPath)
     console.log(`  已注入视图列表路径 → ${indexPath}`)
+  } else {
+    console.warn('  ⚠ client.js 里没找到 __DSH_CHEMFLOW_INDEX__ 占位符，跳过列表路径注入')
   }
+  if (source.includes('__DSH_CHEMFLOW_SKETCH__')) {
+    source = source.replaceAll('__DSH_CHEMFLOW_SKETCH__', sketchInfoPath)
+    console.log(`  已注入画板登记文件 → ${sketchInfoPath}`)
+  } else {
+    console.warn('  ⚠ client.js 里没找到 __DSH_CHEMFLOW_SKETCH__ 占位符，跳过画板路径注入')
+  }
+  writeFileSync(clientPath, source, 'utf8')
 }
 
 console.log('')

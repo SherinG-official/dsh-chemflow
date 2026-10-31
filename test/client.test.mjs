@@ -30,7 +30,7 @@ globalThis.window = {
 
 await import('../lib/client.js')
 
-test('apply 注册两个 tab 类型 + 头部按钮；sidebarRight 走可选探测', () => {
+test('apply 注册三个 tab 类型 + 一组头部按钮；sidebarRight 走可选探测', () => {
   const tabs = []
   const slots = []
   const ctx = {
@@ -44,10 +44,13 @@ test('apply 注册两个 tab 类型 + 头部按钮；sidebarRight 走可选探�
   }
   applyFn(ctx)
 
-  assert.deepEqual(tabs.map((t) => t.kind), ['chem-structure', 'chem-structure-index'])
+  assert.deepEqual(tabs.map((t) => t.kind), ['chem-structure', 'chem-structure-index', 'chem-sketch'])
   assert.ok(slots.some((s) => s.name === 'sidebar.right.pane.tab' && s.key === 'dsh-chemflow-viewer'))
   assert.ok(slots.some((s) => s.name === 'sidebar.right.pane.tab' && s.key === 'dsh-chemflow-index'))
-  assert.ok(slots.some((s) => s.name === 'conversation.session.header.utilities'))
+  assert.ok(slots.some((s) => s.name === 'sidebar.right.pane.tab' && s.key === 'dsh-chemflow-sketch'))
+  // 两个图标合成**一组**：分开注册会被宿主的容器间距拆散
+  const headers = slots.filter((s) => s.name === 'conversation.session.header.utilities')
+  assert.equal(headers.length, 1, '头部按钮应是一组')
   // sidebarRight 不能写进 inject —— 缺它的宿主会让插件停在 PENDING（“没激活”且无报错）
   assert.deepEqual(injectList, ['slots', 'sidebarRightTabs'])
 })

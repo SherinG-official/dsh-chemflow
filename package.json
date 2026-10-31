@@ -53,6 +53,6 @@
   "scripts": {
     "smoke": "node scripts/smoke.mjs",
     "preflight": "node scripts/preflight.mjs",
-    "test": "node test/parse.test.mjs && node test/recipes.test.mjs && node test/units.test.mjs && node test/view.test.mjs && node test/surface.test.mjs && node test/structure.test.mjs && node test/client.test.mjs && node test/client-compat.test.mjs && node test/views.test.mjs && node test/export.test.mjs"
+    "test": "node test/parse.test.mjs && node test/recipes.test.mjs && node test/units.test.mjs && node test/view.test.mjs && node test/surface.test.mjs && node test/structure.test.mjs && node test/client.test.mjs && node test/client-compat.test.mjs && node test/views.test.mjs && node test/export.test.mjs && node test/three-d.test.mjs"
   }
 }
